@@ -129,7 +129,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String result){
                 String s = result.trim();
-
+                //Sementara untuk developing response selalu sukses
+                s = "success";
                 if(s.equalsIgnoreCase("success")){
                     onLoginSuccess();
                 }else {
@@ -188,6 +189,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
+        Intent next = new Intent(getApplicationContext(),OrderHistory.class);
+        startActivity(next);
         finish();
     }
 
