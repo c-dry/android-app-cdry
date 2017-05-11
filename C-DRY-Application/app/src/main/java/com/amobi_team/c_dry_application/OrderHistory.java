@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,13 +24,30 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class OrderHistory extends AppCompatActivity {
     static int PAGE_ADD = 1;
     static int PAGE_VIEW = 2;
     static int PAGE_HISTORY=3;
-
+    public static String emailUser;
+    public static String address;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -141,9 +159,10 @@ public class OrderHistory extends AppCompatActivity {
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
-                                        Toast.makeText(view.getContext(),"Your order has been added," +
-                                        " please see active order and wait our employee come",
-                                        Toast.LENGTH_LONG).show();
+                                        GoOrderLaundry();
+//                                        Toast.makeText(view.getContext(),"Your order has been added," +
+//                                        " please see active order and wait our employee come",
+//                                        Toast.LENGTH_SHORT).show();
                                         sDialog.dismissWithAnimation();
                                     }
                                 })
@@ -166,6 +185,42 @@ public class OrderHistory extends AppCompatActivity {
                 return rootView;
             }
             return null;
+        }
+
+        public void GoOrderLaundry(){
+            RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
+            StringRequest endpointPost = new StringRequest(Request.Method.POST, "http://c-laundry.hol.es/api2/postOrder.php",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Toast.makeText(getContext(),response,Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                        }
+                    }){
+                @Override
+                protected Map<String,String> getParams() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<String, String>();
+                    DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+                    String date = df.format(Calendar.getInstance().getTime());
+                    params.put("date_order", date);
+                    params.put("email",OrderHistory.emailUser);
+                    params.put("address",OrderHistory.address);
+                    return params;
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<String, String>();
+                    params.put("Content-Type","application/x-www-form-urlencoded");
+                    return params;
+                }
+            };
+            requestQueue.add(endpointPost);
         }
     }
 

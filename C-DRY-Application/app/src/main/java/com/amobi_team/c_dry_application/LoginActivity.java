@@ -15,6 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,14 +32,22 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,10 +57,47 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
+
     @Bind(R.id.input_email) EditText _emailText;
     @Bind(R.id.input_password) EditText _passwordText;
     @Bind(R.id.btn_login) Button _loginButton;
     @Bind(R.id.link_signup) TextView _signupLink;
+
+    public void getDetailUser(){
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest endpoint = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getUser.php?email="+OrderHistory.emailUser,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject result = new JSONObject(response);
+                            JSONArray results = result.getJSONArray("result");
+                            OrderHistory.address = results.getJSONObject(0).getString("address");
+                            Log.e("Address From Get",OrderHistory.address);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return super.getParams();
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return super.getHeaders();
+            }
+        };
+        requestQueue.add(endpoint);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +130,14 @@ public class LoginActivity extends AppCompatActivity {
     private void tryLogin(String email, String password) {
 
         class LoginAsync extends AsyncTask<String, Void, String> {
-
+            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+                    R.style.AppTheme_Dark_Dialog);
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
             }
 
             @Override
@@ -136,6 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                 }else {
                     onLoginFailed();
                 }
+                progressDialog.dismiss();
             }
         }
 
@@ -153,19 +210,20 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
+//        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
+//                R.style.AppTheme_Dark_Dialog);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Authenticating...");
+//        progressDialog.show();
 
         String email = _emailText.getText().toString();
+        OrderHistory.emailUser = email;
         String password = _passwordText.getText().toString();
 
         // TODO: Implement your own authentication logic here.
 
         tryLogin(email, password);
-        progressDialog.dismiss();
+//        progressDialog.dismiss();
     }
 
 
@@ -190,6 +248,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent next = new Intent(getApplicationContext(),OrderHistory.class);
+        getDetailUser();
+        Toast.makeText(this,"Welcome to C-dry : "+OrderHistory.emailUser, Toast.LENGTH_SHORT).show();
         startActivity(next);
         finish();
     }
