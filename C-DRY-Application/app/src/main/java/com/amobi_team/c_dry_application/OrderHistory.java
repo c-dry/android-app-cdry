@@ -1,5 +1,6 @@
 package com.amobi_team.c_dry_application;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,18 +13,22 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amobi_team.c_dry_application.model.OrderLaundry;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -32,12 +37,18 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -48,6 +59,9 @@ public class OrderHistory extends AppCompatActivity {
     static int PAGE_HISTORY=3;
     public static String emailUser;
     public static String address;
+    private static List<OrderLaundry> resultResponse = new ArrayList<>();
+
+    static ProgressDialog progressDialog = null;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -160,9 +174,6 @@ public class OrderHistory extends AppCompatActivity {
                                     @Override
                                     public void onClick(SweetAlertDialog sDialog) {
                                         GoOrderLaundry();
-//                                        Toast.makeText(view.getContext(),"Your order has been added," +
-//                                        " please see active order and wait our employee come",
-//                                        Toast.LENGTH_SHORT).show();
                                         sDialog.dismissWithAnimation();
                                     }
                                 })
@@ -175,13 +186,32 @@ public class OrderHistory extends AppCompatActivity {
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_VIEW) {
                 View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.lightSteelBlue1));
-
+                TextView text = (TextView) rootView.findViewById(R.id.txtNotFound);
+                text.setVisibility(View.VISIBLE);
+                getActiveOrderByEmail();
+                if(resultResponse!=null) {
+                    ListView listView = (ListView) rootView.findViewById(R.id.listViewResult);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnly());
+                        listView.setAdapter(adapter);
+                        text.setVisibility(View.INVISIBLE);
+                }
                 return rootView;
             }
+
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_HISTORY) {
                 View rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.blueRidgeMtns));
-
+                TextView text = (TextView) rootView.findViewById(R.id.txtNotFound2);
+                text.setVisibility(View.VISIBLE);
+                getHistoryOrderByEmail();
+                if(resultResponse!=null) {
+                    ListView listView = (ListView) rootView.findViewById(R.id.listViewHistory);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                            android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnly());
+                        listView.setAdapter(adapter);
+                        text.setVisibility(View.INVISIBLE);
+                }
                 return rootView;
             }
             return null;
@@ -194,6 +224,9 @@ public class OrderHistory extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             Toast.makeText(getContext(),response,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(),"Your order has been added," +
+                                            " please see active order and wait our employee come",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     },
                     new Response.ErrorListener(){
@@ -205,9 +238,8 @@ public class OrderHistory extends AppCompatActivity {
                 @Override
                 protected Map<String,String> getParams() throws AuthFailureError {
                     Map<String,String> params = new HashMap<String, String>();
-                    DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
-                    String date = df.format(Calendar.getInstance().getTime());
-                    params.put("date_order", date);
+                    String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+                    params.put("date_order", currentDate);
                     params.put("email",OrderHistory.emailUser);
                     params.put("address",OrderHistory.address);
                     return params;
@@ -221,6 +253,121 @@ public class OrderHistory extends AppCompatActivity {
                 }
             };
             requestQueue.add(endpointPost);
+        }
+
+        public void getActiveOrderByEmail(){
+            resultResponse= new ArrayList<>();
+            RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
+            StringRequest endpoint = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getOrders.php?email="+OrderHistory.emailUser,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject result = new JSONObject(response);
+                                JSONArray results = result.getJSONArray("result");
+                                for (int i = 0; i < results.length(); i++) {
+                                    OrderLaundry orderLaundry = new OrderLaundry();
+                                    orderLaundry.setId_order(results.getJSONObject(i).getString("id_order"));
+                                    orderLaundry.setEmail(results.getJSONObject(i).getString("email"));
+                                    orderLaundry.setAddress(results.getJSONObject(i).getString("address"));
+                                    orderLaundry.setWeight(results.getJSONObject(i).getString("weight"));
+                                    orderLaundry.setPrice(results.getJSONObject(i).getString("price"));
+                                    orderLaundry.setDate_order(results.getJSONObject(i).getString("date_order"));
+                                    orderLaundry.setDate_end(results.getJSONObject(i).getString("date_end"));
+                                    orderLaundry.setStatus(results.getJSONObject(i).getString("status"));
+                                    resultResponse.add(orderLaundry);
+                                }
+
+                            } catch (JSONException e) {
+
+                                e.printStackTrace();
+                            }
+                            progressDialog.dismiss();
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                    }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    return super.getParams();
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    return super.getHeaders();
+                }
+            };
+            progressDialog = new ProgressDialog(this.getContext(),R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Getting Data");
+            progressDialog.show();
+            requestQueue.add(endpoint);
+        }
+
+        public void getHistoryOrderByEmail(){
+            resultResponse= new ArrayList<>();
+            RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
+            StringRequest endpoint = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getHistory.php?email="+OrderHistory.emailUser,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject result = new JSONObject(response);
+                                JSONArray results = result.getJSONArray("result");
+                                for (int i = 0; i < results.length(); i++) {
+                                    OrderLaundry orderLaundry = new OrderLaundry();
+                                    orderLaundry.setId_order(results.getJSONObject(i).getString("id_order"));
+                                    orderLaundry.setEmail(results.getJSONObject(i).getString("email"));
+                                    orderLaundry.setAddress(results.getJSONObject(i).getString("address"));
+                                    orderLaundry.setWeight(results.getJSONObject(i).getString("weight"));
+                                    orderLaundry.setPrice(results.getJSONObject(i).getString("price"));
+                                    orderLaundry.setDate_order(results.getJSONObject(i).getString("date_order"));
+                                    orderLaundry.setDate_end(results.getJSONObject(i).getString("date_end"));
+                                    orderLaundry.setStatus(results.getJSONObject(i).getString("status"));
+                                    resultResponse.add(orderLaundry);
+                                }
+                            } catch (JSONException e) {
+
+                                e.printStackTrace();
+                            }
+                            progressDialog.dismiss();
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                    }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    return super.getParams();
+                }
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    return super.getHeaders();
+                }
+            };
+            progressDialog = new ProgressDialog(this.getContext(),R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Getting Data...");
+            progressDialog.show();
+            requestQueue.add(endpoint);
+        }
+
+        public ArrayList<String> parseOrderLaundryToShowDateOrderOnly(){
+            ArrayList<String> temp = new ArrayList<>();
+            for (int i = 0; i < resultResponse.size(); i++) {
+                temp.add(resultResponse.get(i).getDate_order());
+            }
+            return temp;
         }
     }
 
@@ -236,24 +383,7 @@ public class OrderHistory extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
-//            switch (position){
-//                case 0:
-//                        //Add
-//                        AddOrder addOrder = new AddOrder();
-//                        return addOrder;
-//                case 1:
-//                        //ActiveOrder
-//                        ViewOrder viewOrder = new ViewOrder();
-//                        return viewOrder;
-//                case 2:
-//                        //ViewHistory
-//                        ViewOrderHistory viewOrderHistory = new ViewOrderHistory();
-//                        return viewOrderHistory;
-//            }
-//            return null;
         }
 
         @Override
@@ -275,4 +405,6 @@ public class OrderHistory extends AppCompatActivity {
             return null;
         }
     }
+
+
 }

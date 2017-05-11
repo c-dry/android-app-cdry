@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-
+    private SharedPreferences sharedPreferences;
 
     @Bind(R.id.input_email) EditText _emailText;
     @Bind(R.id.input_password) EditText _passwordText;
@@ -114,8 +114,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        _signupLink.setOnClickListener(new View.OnClickListener() {
+        sharedPreferences = getSharedPreferences("RememberEmail",MODE_PRIVATE);
 
+        _emailText.setText(sharedPreferences.getString("email",""));
+
+        _signupLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start the Signup activity
@@ -249,6 +252,9 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
         Intent next = new Intent(getApplicationContext(),OrderHistory.class);
         getDetailUser();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("email", OrderHistory.emailUser);
+            editor.commit();
         Toast.makeText(this,"Welcome to C-dry : "+OrderHistory.emailUser, Toast.LENGTH_SHORT).show();
         startActivity(next);
         finish();
