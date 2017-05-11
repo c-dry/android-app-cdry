@@ -1,20 +1,34 @@
 package com.amobi_team.c_dry_application;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class OrderHistory extends AppCompatActivity {
+    static int PAGE_ADD = 1;
+    static int PAGE_VIEW = 2;
+    static int PAGE_HISTORY=3;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,7 +50,10 @@ public class OrderHistory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().hide();
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -47,15 +64,8 @@ public class OrderHistory extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.blue_btn_bg_pressed_color));
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
     }
 
@@ -72,12 +82,12 @@ public class OrderHistory extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -110,22 +120,49 @@ public class OrderHistory extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            if(getArguments().getInt(ARG_SECTION_NUMBER)==0) {
+            if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_ADD) {
                 View rootView = inflater.inflate(R.layout.fragment_add_order, container, false);
-//                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                rootView.setBackgroundColor(getResources().getColor(R.color.forgetMeNots));
+                TextView notif = (TextView) rootView.findViewById(R.id.tvNotif);
+                notif.setText("Berikut adalah ketentuan yang berlaku : \n" +
+                        "1. Aturan Pertama"+"\n" +
+                        "2. Aturan Kedua, dst...");
+
+                Button btnTambah = (Button) rootView.findViewById(R.id.btnTambah);
+
+                btnTambah.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View view) {
+
+                        new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Are you sure?")
+                                .setContentText("You can not cancel your order from this application.")
+                                .setConfirmText("Order Now")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        Toast.makeText(view.getContext(),"Your order has been added," +
+                                        " please see active order and wait our employee come",
+                                        Toast.LENGTH_LONG).show();
+                                        sDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+                });
+
                 return rootView;
             }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==1) {
+            else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_VIEW) {
                 View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
-//                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                rootView.setBackgroundColor(getResources().getColor(R.color.lightSteelBlue1));
+
                 return rootView;
             }
-            else if(getArguments().getInt(ARG_SECTION_NUMBER)==2) {
+            else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_HISTORY) {
                 View rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
-//                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-//                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                rootView.setBackgroundColor(getResources().getColor(R.color.blueRidgeMtns));
+
                 return rootView;
             }
             return null;

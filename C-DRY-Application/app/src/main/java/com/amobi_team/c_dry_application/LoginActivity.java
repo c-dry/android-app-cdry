@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
             protected void onPostExecute(String result){
                 String s = result.trim();
                 //Sementara untuk developing response selalu sukses
-                s = "success";
+//                s = "success";
                 if(s.equalsIgnoreCase("success")){
                     onLoginSuccess();
                 }else {
