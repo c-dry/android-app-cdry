@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +37,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,14 +57,15 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class OrderHistory extends AppCompatActivity {
-    static int PAGE_ADD = 1;
-    static int PAGE_VIEW = 2;
-    static int PAGE_HISTORY=3;
+    static int PAGE_ADD = 0;
+    static int PAGE_VIEW = 1;
+    static int PAGE_HISTORY=2;
     public static String emailUser;
     public static String address;
     private static List<OrderLaundry> resultResponseActive = new ArrayList<>();
     private static List<OrderLaundry> resultResponseHistory = new ArrayList<>();
-
+    private static ArrayAdapter<String> adapterActive;
+    private static ArrayAdapter<String> adapterHistory;
     static ProgressDialog progressDialog = null;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -157,9 +161,6 @@ public class OrderHistory extends AppCompatActivity {
                 View rootView = inflater.inflate(R.layout.fragment_add_order, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.forgetMeNots));
 
-                //debug section number
-//                Toast.makeText(this.getContext(),getArguments().getInt(ARG_SECTION_NUMBER),Toast.LENGTH_SHORT).show();
-
                 TextView notif = (TextView) rootView.findViewById(R.id.tvNotif);
                 notif.setText("Berikut adalah ketentuan yang berlaku : \n" +
                         "1. Aturan Pertama"+"\n" +
@@ -189,42 +190,77 @@ public class OrderHistory extends AppCompatActivity {
                 return rootView;
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_VIEW) {
-                View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
+                final View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.lightSteelBlue1));
 
-                //debug section number
-//                Toast.makeText(this.getContext(),getArguments().getInt(ARG_SECTION_NUMBER),Toast.LENGTH_SHORT).show();
+                Button btnRefreshActive = (Button) rootView.findViewById(R.id.btnRefreshActive);
+                final ListView listViewActive = (ListView) rootView.findViewById(R.id.listViewResult);
+                final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound);
 
-                TextView text = (TextView) rootView.findViewById(R.id.txtNotFound);
-                text.setVisibility(View.VISIBLE);
-                getActiveOrderByEmail();
-                if(resultResponseActive.size()>0) {
-                    ListView listView = (ListView) rootView.findViewById(R.id.listViewResult);
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnly(resultResponseActive));
-                    listView.setAdapter(adapter);
-                    text.setVisibility(View.INVISIBLE);
-                }
+                text.setVisibility(View.INVISIBLE);
+
+                btnRefreshActive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(resultResponseActive.isEmpty())
+                            text.setVisibility(View.VISIBLE);
+                        listViewActive.setAdapter(null);
+                        getActiveOrderByEmail();
+                        adapterActive = new ArrayAdapter<>(rootView.getContext(),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnlyForActive());
+                        listViewActive.setAdapter(adapterActive);
+                    }
+                });
+
+                listViewActive.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        new LovelyStandardDialog(adapterView.getContext())
+                                .setTopColorRes(R.color.BiruAnyaran)
+                                .setTitle("Detail Order")
+                                .setMessage(resultResponseActive.get(i).toString())
+                                .setNegativeButton(android.R.string.ok, null)
+                                .show();
+                    }
+                });
+
                 return rootView;
             }
 
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_HISTORY) {
-                View rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
+                final View rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.blueRidgeMtns));
+                final ListView listView = (ListView) rootView.findViewById(R.id.listViewHistory);
+                Button btnRefresh = (Button) rootView.findViewById(R.id.btnRefresh);
+                final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound2);
 
-                //debug section number
-//                Toast.makeText(this.getContext(),getArguments().getInt(ARG_SECTION_NUMBER),Toast.LENGTH_SHORT).show();
+                text.setVisibility(View.INVISIBLE);
 
-                TextView text = (TextView) rootView.findViewById(R.id.txtNotFound2);
-                text.setVisibility(View.VISIBLE);
-                getHistoryOrderByEmail();
-                if(resultResponseHistory.size()>0) {
-                    ListView listView = (ListView) rootView.findViewById(R.id.listViewHistory);
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                            android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnly(resultResponseHistory));
-                    listView.setAdapter(adapter);
-                    text.setVisibility(View.INVISIBLE);
-                }
+                btnRefresh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(resultResponseHistory.isEmpty())
+                            text.setVisibility(View.VISIBLE);
+                        listView.setAdapter(null);
+                        getHistoryOrderByEmail();
+                        adapterHistory = new ArrayAdapter<>(rootView.getContext(),
+                                android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnlyForHistory());
+                        listView.setAdapter(adapterHistory);
+                    }
+                });
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        new LovelyStandardDialog(adapterView.getContext())
+                                .setTopColorRes(R.color.forgetMeNots)
+                                .setTitle("Detail History")
+                                .setMessage(resultResponseActive.get(i).toString())
+                                .setNegativeButton(android.R.string.ok, null)
+                                .show();
+                    }
+                });
+
                 return rootView;
             }
             return null;
@@ -269,13 +305,13 @@ public class OrderHistory extends AppCompatActivity {
         }
 
         public void getActiveOrderByEmail(){
-            resultResponseActive.clear();
-            RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
-            StringRequest endpoint = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getOrders.php?email="+OrderHistory.emailUser,
+            RequestQueue requestQueueActive = Volley.newRequestQueue(this.getContext());
+            StringRequest endpointActive = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getOrders.php?email="+OrderHistory.emailUser,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                resultResponseActive.clear();
                                 JSONObject result = new JSONObject(response);
                                 JSONArray results = result.getJSONArray("result");
                                 for (int i = 0; i < results.length(); i++) {
@@ -289,10 +325,11 @@ public class OrderHistory extends AppCompatActivity {
                                     orderLaundry.setDate_end(results.getJSONObject(i).getString("date_end"));
                                     orderLaundry.setStatus(results.getJSONObject(i).getString("status"));
                                     resultResponseActive.add(orderLaundry);
+                                    for (OrderLaundry orderLaundry1: resultResponseActive) {
+                                        Log.e("Data : ",orderLaundry1.toString());
+                                    }
                                 }
-
                             } catch (JSONException e) {
-
                                 e.printStackTrace();
                             }
                             progressDialog.dismiss();
@@ -301,7 +338,7 @@ public class OrderHistory extends AppCompatActivity {
                     new Response.ErrorListener(){
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getContext(),error.getMessage(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(),error.toString(),Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                         }
                     }){
@@ -319,18 +356,19 @@ public class OrderHistory extends AppCompatActivity {
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage("Getting Data");
             progressDialog.show();
-            requestQueue.add(endpoint);
+
+            requestQueueActive.add(endpointActive);
 
         }
 
         public void  getHistoryOrderByEmail(){
-            resultResponseHistory.clear();
             RequestQueue requestQueue = Volley.newRequestQueue(this.getContext());
             StringRequest endpoint = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getHistory.php?email="+OrderHistory.emailUser,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                resultResponseHistory.clear();
                                 JSONObject result = new JSONObject(response);
                                 JSONArray results = result.getJSONArray("result");
                                 for (int i = 0; i < results.length(); i++) {
@@ -344,10 +382,13 @@ public class OrderHistory extends AppCompatActivity {
                                     orderLaundry.setDate_end(results.getJSONObject(i).getString("date_end"));
                                     orderLaundry.setStatus(results.getJSONObject(i).getString("status"));
                                     resultResponseHistory.add(orderLaundry);
+                                    for (OrderLaundry orderLaundry1: resultResponseHistory) {
+                                        Log.e("Data : ",orderLaundry1.toString());
+                                    }
                                 }
                             } catch (JSONException e) {
-
                                 e.printStackTrace();
+                                Toast.makeText(getContext(),e.toString(),Toast.LENGTH_LONG).show();
                             }
                             progressDialog.dismiss();
                         }
@@ -376,10 +417,20 @@ public class OrderHistory extends AppCompatActivity {
             requestQueue.add(endpoint);
         }
 
-        public ArrayList<String> parseOrderLaundryToShowDateOrderOnly(List<OrderLaundry> resultResponse){
+        public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForActive(){
             ArrayList<String> temp = new ArrayList<>();
-            for (int i = 0; i < resultResponse.size(); i++) {
-                temp.add(resultResponse.get(i).getDate_order());
+            for (int i = 0; i < resultResponseActive.size(); i++) {
+                temp.add(resultResponseActive.get(i).getDate_order());
+                Log.e("Parsing data",resultResponseActive.get(i).getDate_order().toString());
+            }
+            return temp;
+        }
+
+        public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForHistory(){
+            ArrayList<String> temp = new ArrayList<>();
+            for (int i = 0; i < resultResponseHistory.size(); i++) {
+                temp.add(resultResponseHistory.get(i).getDate_order());
+                Log.e("Parsing data",resultResponseHistory.get(i).getDate_order().toString());
             }
             return temp;
         }
@@ -397,7 +448,7 @@ public class OrderHistory extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return PlaceholderFragment.newInstance(position + 1);
+            return PlaceholderFragment.newInstance(position);
         }
 
         @Override

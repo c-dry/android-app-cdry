@@ -79,4 +79,17 @@ public class OrderLaundry {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return
+
+                "email : " + email + "\n" +
+                "address : " + address + "\n" +
+                "weight : " + weight + "\n" +
+                "price : " + price + "\n" +
+                "Order : " + date_order +"\n" +
+                "Finish : " + date_end + "\n" +
+                "status : " + status +"\n";
+    }
 }

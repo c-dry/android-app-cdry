@@ -35,5 +35,7 @@ dependencies {
     compile 'cn.pedant.sweetalert:library:1.3'
 
     compile 'com.mcxiaoke.volley:library:1.0.19'
+
+    compile 'com.github.yarolegovich:LovelyDialog:7376343d86'
     testCompile 'junit:junit:4.12'
 }
