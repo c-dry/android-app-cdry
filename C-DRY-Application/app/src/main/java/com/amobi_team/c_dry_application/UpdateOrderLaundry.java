@@ -86,7 +86,7 @@ public class UpdateOrderLaundry extends AppCompatActivity {
 
     public void updateOrderByIdOrder(){
         RequestQueue requestQueueActive = Volley.newRequestQueue(this);
-        StringRequest endpointActive = new StringRequest(Request.Method.POST, "c-laundry.hol.es/api2/updateOrder.php",
+        StringRequest endpointActive = new StringRequest(Request.Method.POST, "http://c-laundry.hol.es/api2/updateOrder.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -120,7 +120,7 @@ public class UpdateOrderLaundry extends AppCompatActivity {
         };
         progressDialog = new ProgressDialog(UpdateOrderLaundry.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Deleting Order");
+        progressDialog.setMessage("Updating Order");
         progressDialog.show();
 
         requestQueueActive.add(endpointActive);
