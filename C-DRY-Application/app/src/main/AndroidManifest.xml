@@ -11,27 +11,29 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-
         <activity
-            android:name="com.amobi_team.c_dry_application.SplashScreen"
-            android:theme="@style/AppTheme.Dark"
+            android:name=".SplashScreen"
             android:label="@string/app_name"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/AppTheme.Dark">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".LoginActivity" android:theme="@style/AppTheme.Dark"></activity>
-        <activity android:name=".SignupActivity" android:theme="@style/AppTheme.Dark"></activity>
-
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Dark" />
+        <activity
+            android:name=".SignupActivity"
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".OrderHistory"
             android:label="OrderHistory"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".OfficerActivity" />
+        <activity android:name=".UpdateOrderLaundry"></activity>
     </application>
 
 </manifest>

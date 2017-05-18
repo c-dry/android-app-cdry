@@ -194,8 +194,9 @@ public class LoginActivity extends AppCompatActivity {
                     onLoginSuccess();
                 }
                 else if(s.equalsIgnoreCase("success admin")){
-                    Toast.makeText(getApplicationContext(),"Maaf Fitur petugas sedang dalam pengembangan"
-                    ,Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(),"Maaf Fitur petugas sedang dalam pengembangan"
+//                    ,Toast.LENGTH_SHORT).show();
+                    onLoginAdmin();
                 }
                 else {
                     onLoginFailed();
@@ -261,6 +262,14 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("email", OrderHistory.emailUser);
             editor.commit();
         Toast.makeText(this,"Welcome to C-dry : "+OrderHistory.emailUser, Toast.LENGTH_SHORT).show();
+        startActivity(next);
+        finish();
+    }
+
+    public void onLoginAdmin(){
+        _loginButton.setEnabled(true);
+        Intent next = new Intent(getApplicationContext(),OfficerActivity.class);
+        Toast.makeText(this,"Welcome to C-dry : Officer", Toast.LENGTH_SHORT).show();
         startActivity(next);
         finish();
     }

@@ -22,20 +22,21 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //splash screen
+    
+
+    //login & signup
+    //sweet alert dialog
+    
+    
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:design:23.4.0'
-
-    //splash screen
     compile 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
-
-    //login & signup
     compile 'com.jakewharton:butterknife:7.0.1'
-    //sweet alert dialog
-    compile 'cn.pedant.sweetalert:library:1.3'
-
-    compile 'com.mcxiaoke.volley:library:1.0.19'
-
     compile 'com.github.yarolegovich:LovelyDialog:7376343d86'
+    compile 'cn.pedant.sweetalert:library:1.3'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 }
