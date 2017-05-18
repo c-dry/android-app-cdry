@@ -102,8 +102,6 @@ public class OrderHistory extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.blue_btn_bg_pressed_color));
-
-
     }
 
 
@@ -172,18 +170,27 @@ public class OrderHistory extends AppCompatActivity {
                     @Override
                     public void onClick(final View view) {
 
-                        new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Are you sure?")
-                                .setContentText("You can not cancel your order from this application.")
-                                .setConfirmText("Order Now")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sDialog) {
-                                        GoOrderLaundry();
-                                        sDialog.dismissWithAnimation();
-                                    }
-                                })
-                                .show();
+                   SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE);
+                    sweetAlertDialog.setCanceledOnTouchOutside(false);
+                    sweetAlertDialog.setTitleText("Are you sure?")
+                            .setContentText("You can not cancel your order from this application.")
+                            .setConfirmText("Order Now")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    GoOrderLaundry();
+                                    sDialog.dismissWithAnimation();
+                                }
+                            })
+                            .setCancelText("Cancel Order")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            })
+                            .show();
+
                     }
                 });
 
@@ -192,19 +199,14 @@ public class OrderHistory extends AppCompatActivity {
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_VIEW) {
                 final View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.lightSteelBlue1));
-
                 Button btnRefreshActive = (Button) rootView.findViewById(R.id.btnRefreshActive);
                 final ListView listViewActive = (ListView) rootView.findViewById(R.id.listViewResult);
                 final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound);
-
                 text.setVisibility(View.INVISIBLE);
 
                 btnRefreshActive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(resultResponseActive.isEmpty())
-                            text.setVisibility(View.VISIBLE);
-                        listViewActive.setAdapter(null);
                         getActiveOrderByEmail();
                         adapterActive = new ArrayAdapter<>(rootView.getContext(),
                                 android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnlyForActive());
@@ -233,15 +235,11 @@ public class OrderHistory extends AppCompatActivity {
                 final ListView listView = (ListView) rootView.findViewById(R.id.listViewHistory);
                 Button btnRefresh = (Button) rootView.findViewById(R.id.btnRefresh);
                 final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound2);
-
                 text.setVisibility(View.INVISIBLE);
 
                 btnRefresh.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(resultResponseHistory.isEmpty())
-                            text.setVisibility(View.VISIBLE);
-                        listView.setAdapter(null);
                         getHistoryOrderByEmail();
                         adapterHistory = new ArrayAdapter<>(rootView.getContext(),
                                 android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnlyForHistory());
@@ -255,7 +253,7 @@ public class OrderHistory extends AppCompatActivity {
                         new LovelyStandardDialog(adapterView.getContext())
                                 .setTopColorRes(R.color.forgetMeNots)
                                 .setTitle("Detail History")
-                                .setMessage(resultResponseActive.get(i).toString())
+                                .setMessage(resultResponseHistory.get(i).toString())
                                 .setNegativeButton(android.R.string.ok, null)
                                 .show();
                     }

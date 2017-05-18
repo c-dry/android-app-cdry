@@ -190,9 +190,14 @@ public class LoginActivity extends AppCompatActivity {
                 String s = result.trim();
                 //Sementara untuk developing response selalu sukses
 //                s = "success";
-                if(s.equalsIgnoreCase("success")){
+                if(s.equalsIgnoreCase("success user")){
                     onLoginSuccess();
-                }else {
+                }
+                else if(s.equalsIgnoreCase("success admin")){
+                    Toast.makeText(getApplicationContext(),"Maaf Fitur petugas sedang dalam pengembangan"
+                    ,Toast.LENGTH_SHORT).show();
+                }
+                else {
                     onLoginFailed();
                 }
                 progressDialog.dismiss();
