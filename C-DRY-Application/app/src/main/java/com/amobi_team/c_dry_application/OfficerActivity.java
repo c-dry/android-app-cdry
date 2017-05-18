@@ -35,7 +35,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class OfficerActivity extends AppCompatActivity {
     private ListView listView;
-    private List<OrderLaundry> resultResponseActive;
+    private List<OrderLaundry> resultResponseActive = new ArrayList<>();
     private Button btnRefresh;
     private ArrayAdapter<String> adapterActive;
     static ProgressDialog progressDialog = null;
@@ -46,11 +46,12 @@ public class OfficerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_officer);
         listView = (ListView) findViewById(R.id.ListActiveOrder);
         btnRefresh = (Button) findViewById(R.id.btnRefreshActiveOfficer);
+        setTitle("Officer C-Dry");
 
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActiveOrderByEmail();
+                getActiveOrder();
                 adapterActive = new ArrayAdapter<>(getApplicationContext(),
                         android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnlyForActive());
                 listView.setAdapter(adapterActive);
@@ -60,7 +61,7 @@ public class OfficerActivity extends AppCompatActivity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-            SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE);
+            SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OfficerActivity.this, SweetAlertDialog.WARNING_TYPE);
             sweetAlertDialog.setCanceledOnTouchOutside(false);
             sweetAlertDialog.setTitleText("Action")
                     .setContentText("Please chooce your action : ")
@@ -87,9 +88,9 @@ public class OfficerActivity extends AppCompatActivity {
         });
     }
 
-    public void getActiveOrderByEmail(){
+    public void getActiveOrder(){
         RequestQueue requestQueueActive = Volley.newRequestQueue(this);
-        StringRequest endpointActive = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getAllOrder.php",
+        StringRequest endpointActive = new StringRequest(Request.Method.GET, "http://c-laundry.hol.es/api2/getAllOrders.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -135,7 +136,7 @@ public class OfficerActivity extends AppCompatActivity {
                 return super.getHeaders();
             }
         };
-        progressDialog = new ProgressDialog(getApplicationContext(),R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(OfficerActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Getting Data");
         progressDialog.show();
@@ -174,7 +175,7 @@ public class OfficerActivity extends AppCompatActivity {
                 return params;
             }
         };
-        progressDialog = new ProgressDialog(getApplicationContext(),R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(OfficerActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Deleting Order");
         progressDialog.show();

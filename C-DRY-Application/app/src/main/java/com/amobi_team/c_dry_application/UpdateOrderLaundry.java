@@ -32,33 +32,40 @@ public class UpdateOrderLaundry extends AppCompatActivity {
     private EditText edDate;
     private Button btnUpdate;
     private ProgressDialog progressDialog = null;
-
+    private OrderLaundry dataUpdate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_order_laundry);
         edAddress = (EditText) findViewById(R.id.edAddress);
-        edEmail = (EditText) findViewById(R.id.edEmail);
-        edWeight = (EditText) findViewById(R.id.edWeight);
         edPrice = (EditText) findViewById(R.id.edPrice);
         edDate = (EditText) findViewById(R.id.edDateEnd);
+        edEmail = (EditText) findViewById(R.id.edEmail);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        edWeight = (EditText) findViewById(R.id.edWeight);
 
         edAddress.setText(data.getAddress());
         edEmail.setText(data.getEmail());
+        edDate.setText(data.getDate_order());
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(view.getContext(), SweetAlertDialog.WARNING_TYPE);
+                dataUpdate = new OrderLaundry();
+                dataUpdate.setId_order(data.getId_order());
+                dataUpdate.setWeight(edWeight.getText().toString());
+                dataUpdate.setPrice(edPrice.getText().toString());
+                dataUpdate.setDate_end(edDate.getText().toString());
+
+                SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(UpdateOrderLaundry.this, SweetAlertDialog.WARNING_TYPE);
                 sweetAlertDialog.setCanceledOnTouchOutside(false);
                 sweetAlertDialog.setTitleText("Action")
                         .setContentText("Please chooce your action : ")
-                        .setConfirmText("Confirm Update")
+                        .setConfirmText("Confirm")
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
-                                updateOrderByIdOrder(data.getId_order());
+                                updateOrderByIdOrder();
                                 sDialog.dismissWithAnimation();
                                 Intent intent = new Intent(getApplicationContext(),OfficerActivity.class);
                                 startActivity(intent);
@@ -77,7 +84,7 @@ public class UpdateOrderLaundry extends AppCompatActivity {
         });
     }
 
-    public void updateOrderByIdOrder(final String id_order){
+    public void updateOrderByIdOrder(){
         RequestQueue requestQueueActive = Volley.newRequestQueue(this);
         StringRequest endpointActive = new StringRequest(Request.Method.POST, "c-laundry.hol.es/api2/updateOrder.php",
                 new Response.Listener<String>() {
@@ -97,7 +104,10 @@ public class UpdateOrderLaundry extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params = new HashMap<String, String>();
-                params.put("id_order",id_order);
+                params.put("id_order",dataUpdate.getId_order());
+                params.put("weight",dataUpdate.getWeight());
+                params.put("price",dataUpdate.getPrice());
+                params.put("date_end",dataUpdate.getDate_end());
                 return params;
             }
 
@@ -108,7 +118,7 @@ public class UpdateOrderLaundry extends AppCompatActivity {
                 return params;
             }
         };
-        progressDialog = new ProgressDialog(getApplicationContext(),R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(UpdateOrderLaundry.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Deleting Order");
         progressDialog.show();
