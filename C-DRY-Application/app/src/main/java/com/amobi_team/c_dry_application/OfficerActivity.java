@@ -58,32 +58,59 @@ public class OfficerActivity extends AppCompatActivity {
             }
         });
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+//                        SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OfficerActivity.this, SweetAlertDialog.WARNING_TYPE);
+//                        sweetAlertDialog.setCanceledOnTouchOutside(false);
+//                        sweetAlertDialog.setTitleText("Action")
+//                                .setContentText("Please chooce your action : ")
+//                                .setConfirmText("Update Order")
+//                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                    @Override
+//                                    public void onClick(SweetAlertDialog sDialog) {
+//                                        UpdateOrderLaundry.data=resultResponseActive.get(i);
+//                                        sDialog.dismissWithAnimation();
+//                                        Intent intent = new Intent(getApplicationContext(),UpdateOrderLaundry.class);
+//                                        startActivity(intent);
+//                                    }
+//                                })
+//                                .setCancelText("Delete Orer")
+//                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                    @Override
+//                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                        deleteActiveOrderById(resultResponseActive.get(i).getId_order().toString());
+//                                        sweetAlertDialog.dismissWithAnimation();
+//                                    }
+//                                })
+//                                .show();
+//                    }
+//        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-            SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OfficerActivity.this, SweetAlertDialog.WARNING_TYPE);
-            sweetAlertDialog.setCanceledOnTouchOutside(false);
-            sweetAlertDialog.setTitleText("Action")
-                    .setContentText("Please chooce your action : ")
-                    .setConfirmText("Update Order")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            UpdateOrderLaundry.data=resultResponseActive.get(i);
-                            sDialog.dismissWithAnimation();
-                            Intent intent = new Intent(getApplicationContext(),UpdateOrderLaundry.class);
-                            startActivity(intent);
-                        }
-                    })
-                    .setCancelText("Delete Orer")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            deleteActiveOrderById(resultResponseActive.get(i).getId_order().toString());
-                            sweetAlertDialog.dismissWithAnimation();
-                        }
-                    })
-                    .show();
+                new LovelyStandardDialog(adapterView.getContext())
+                        .setTopColorRes(R.color.BiruAnyaran)
+                        .setTitle("Detail Order")
+                        .setMessage(resultResponseActive.get(i).toString())
+                        .setNegativeButton(android.R.string.ok, null)
+                        .setPositiveButton("Update", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                UpdateOrderLaundry.data=resultResponseActive.get(i);
+                                Intent intent = new Intent(getApplicationContext(),UpdateOrderLaundry.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("Delete", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                deleteActiveOrderById(resultResponseActive.get(i).getId_order().toString());
+                            }
+                        })
+                        .setNeutralButton("Cancel", null)
+                        .show();
             }
         });
     }
@@ -189,5 +216,30 @@ public class OfficerActivity extends AppCompatActivity {
             Log.e("Parsing data",resultResponseActive.get(i).getDate_order().toString());
         }
         return temp;
+    }
+
+    @Override
+    public void onBackPressed() {
+        SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OfficerActivity.this, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setCanceledOnTouchOutside(false);
+        sweetAlertDialog.setTitleText("Log out")
+                .setContentText("Do you want to exit application ?")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +84,8 @@ public class UpdateOrderLaundry extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     public void updateOrderByIdOrder(){
@@ -90,14 +94,14 @@ public class UpdateOrderLaundry extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(getApplicationContext(),response.toString(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(UpdateOrderLaundry.this,response.toString(),Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
                     }
                 },
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_LONG).show();
+                        Toast.makeText(UpdateOrderLaundry.this,error.toString(),Toast.LENGTH_LONG).show();
                         progressDialog.dismiss();
                     }
                 }){
