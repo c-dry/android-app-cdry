@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#2b7fe4</color>
-    <color name="primary_dark">#1c61b4</color>
-    <color name="primary_darker">#133e71</color>
+    <color name="primary">#5c9ce9</color>
+    <color name="primary_dark">#508bd1</color>
+    <color name="primary_darker">#325d8f</color>
     <color name="accent">#ffffff</color>
 
     <color name="black">#000000</color>
@@ -14,9 +14,9 @@
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
     <color name="white">#FFFFFF</color>
-    <color name="BlueAnyar">#3232ff</color>
-    <color name="BiruAnyaran">#4876ff</color>
-    <color name="forgetMeNots">#7EB6FF</color>
-    <color name="blueRidgeMtns">#4981CE</color>
-    <color name="lightSteelBlue1">#CAE1FF</color>
+    <color name="BlueAnyar">#4272ab</color>
+    <color name="BiruAnyaran">#508bd1</color>
+    <color name="forgetMeNots">#5e99de</color>
+    <color name="blueRidgeMtns">#4477b4</color>
+    <color name="lightSteelBlue1">#65abfd</color>
 </resources>

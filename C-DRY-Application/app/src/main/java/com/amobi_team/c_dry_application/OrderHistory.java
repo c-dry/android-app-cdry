@@ -158,12 +158,16 @@ public class OrderHistory extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_ADD) {
                 View rootView = inflater.inflate(R.layout.fragment_add_order, container, false);
-                rootView.setBackgroundColor(getResources().getColor(R.color.forgetMeNots));
+                rootView.setBackgroundColor(getResources().getColor(R.color.primary));
 
                 TextView notif = (TextView) rootView.findViewById(R.id.tvNotif);
-                notif.setText("Berikut adalah ketentuan yang berlaku : \n" +
-                        "1. Aturan Pertama"+"\n" +
-                        "2. Aturan Kedua, dst...");
+                notif.setText("Hello Member.. \n" +
+                        "In this app, you can order for laundry and see your order \n \n" +
+                        "Step to order : \n" +
+                        "1. Press button Add Order below \n" +
+                        "2. Wait for our courier to pick up your clothes in your house \n" +
+                        "3. Our courier will set weight, price and date end \n" +
+                        "4. You can take your clothes after date end be passed \n");
 
                 Button btnTambah = (Button) rootView.findViewById(R.id.btnTambah);
 
@@ -199,7 +203,7 @@ public class OrderHistory extends AppCompatActivity {
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_VIEW) {
                 final View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
-                rootView.setBackgroundColor(getResources().getColor(R.color.lightSteelBlue1));
+                rootView.setBackgroundColor(getResources().getColor(R.color.primary));
                 Button btnRefreshActive = (Button) rootView.findViewById(R.id.btnRefreshActive);
                 final ListView listViewActive = (ListView) rootView.findViewById(R.id.listViewResult);
                 final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound);
@@ -232,7 +236,7 @@ public class OrderHistory extends AppCompatActivity {
 
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_HISTORY) {
                 final View rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
-                rootView.setBackgroundColor(getResources().getColor(R.color.blueRidgeMtns));
+                rootView.setBackgroundColor(getResources().getColor(R.color.primary));
                 final ListView listView = (ListView) rootView.findViewById(R.id.listViewHistory);
                 Button btnRefresh = (Button) rootView.findViewById(R.id.btnRefresh);
                 final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound2);
