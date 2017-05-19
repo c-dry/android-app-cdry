@@ -91,7 +91,7 @@ public class OfficerActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 new LovelyStandardDialog(adapterView.getContext())
-                        .setTopColorRes(R.color.BiruAnyaran)
+                        .setTopColorRes(R.color.primary_dark)
                         .setTitle("Detail Order")
                         .setMessage(resultResponseActive.get(i).toString())
                         .setNegativeButton(android.R.string.ok, null)

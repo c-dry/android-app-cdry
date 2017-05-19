@@ -7,10 +7,22 @@
     android:background="@color/primary"
     tools:context="com.amobi_team.c_dry_application.OfficerActivity">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="#FFF"
+        android:text="List Order" />
+
     <ListView
         android:id="@+id/ListActiveOrder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp" />
     <Button
         android:id="@+id/btnRefreshActiveOfficer"
         android:layout_width="match_parent"

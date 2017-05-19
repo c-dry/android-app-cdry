@@ -13,9 +13,9 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView android:src="@drawable/cdry_logo"
+        <ImageView android:src="@drawable/laundry"
             android:layout_width="178dp"
-            android:layout_height="89dp"
+            android:layout_height="200dp"
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
 

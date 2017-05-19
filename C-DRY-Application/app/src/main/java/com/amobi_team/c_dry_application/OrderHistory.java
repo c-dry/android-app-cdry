@@ -223,7 +223,7 @@ public class OrderHistory extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         new LovelyStandardDialog(adapterView.getContext())
-                                .setTopColorRes(R.color.BiruAnyaran)
+                                .setTopColorRes(R.color.primary_dark)
                                 .setTitle("Detail Order")
                                 .setMessage(resultResponseActive.get(i).toString())
                                 .setNegativeButton(android.R.string.ok, null)
@@ -256,7 +256,7 @@ public class OrderHistory extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         new LovelyStandardDialog(adapterView.getContext())
-                                .setTopColorRes(R.color.forgetMeNots)
+                                .setTopColorRes(R.color.primary_dark)
                                 .setTitle("Detail History")
                                 .setMessage(resultResponseHistory.get(i).toString())
                                 .setNegativeButton(android.R.string.ok, null)
