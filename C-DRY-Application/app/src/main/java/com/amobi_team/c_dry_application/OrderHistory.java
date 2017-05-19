@@ -2,6 +2,7 @@ package com.amobi_team.c_dry_application;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -418,7 +419,8 @@ public class OrderHistory extends AppCompatActivity {
         public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForActive(){
             ArrayList<String> temp = new ArrayList<>();
             for (int i = 0; i < resultResponseActive.size(); i++) {
-                temp.add(resultResponseActive.get(i).getDate_order());
+                String tempView = resultResponseActive.get(i).getEmail()+" - "+resultResponseActive.get(i).getDate_order();
+                temp.add(tempView);
                 Log.e("Parsing data",resultResponseActive.get(i).getDate_order().toString());
             }
             return temp;
@@ -427,7 +429,8 @@ public class OrderHistory extends AppCompatActivity {
         public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForHistory(){
             ArrayList<String> temp = new ArrayList<>();
             for (int i = 0; i < resultResponseHistory.size(); i++) {
-                temp.add(resultResponseHistory.get(i).getDate_order());
+                String tempView = resultResponseHistory.get(i).getEmail()+" - "+resultResponseHistory.get(i).getDate_order();
+                temp.add(tempView);
                 Log.e("Parsing data",resultResponseHistory.get(i).getDate_order().toString());
             }
             return temp;
@@ -469,5 +472,28 @@ public class OrderHistory extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OrderHistory.this, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setCanceledOnTouchOutside(false);
+        sweetAlertDialog.setTitleText("Log out")
+                .setContentText("Do you want to logout ?")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        Intent intent = new Intent(OrderHistory.this,LoginActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setCancelText("Cancel")
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
 }

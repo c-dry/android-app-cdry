@@ -212,7 +212,8 @@ public class OfficerActivity extends AppCompatActivity {
     public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForActive(){
         ArrayList<String> temp = new ArrayList<>();
         for (int i = 0; i < resultResponseActive.size(); i++) {
-            temp.add(resultResponseActive.get(i).getDate_order());
+            String tempView = resultResponseActive.get(i).getEmail()+" - "+resultResponseActive.get(i).getDate_order();
+            temp.add(tempView);
             Log.e("Parsing data",resultResponseActive.get(i).getDate_order().toString());
         }
         return temp;
@@ -223,7 +224,7 @@ public class OfficerActivity extends AppCompatActivity {
         SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OfficerActivity.this, SweetAlertDialog.WARNING_TYPE);
         sweetAlertDialog.setCanceledOnTouchOutside(false);
         sweetAlertDialog.setTitleText("Log out")
-                .setContentText("Do you want to exit application ?")
+                .setContentText("Do you want to logout ?")
                 .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
