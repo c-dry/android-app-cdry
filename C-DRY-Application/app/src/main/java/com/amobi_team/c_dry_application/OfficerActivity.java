@@ -30,7 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,25 +55,12 @@ public class OfficerActivity extends AppCompatActivity {
         btnRefresh = (Button) findViewById(R.id.btnRefreshActiveOfficer);
         setTitle("Officer C-Dry");
 
+        getActiveOrder();
+
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getActiveOrder();
-
-                adapterActive = new ArrayAdapter<String>
-                        (getApplicationContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForActive()){
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent){
-                        View view = super.getView(position, convertView, parent);
-
-                        TextView tv = (TextView) view.findViewById(android.R.id.text1);
-
-                        tv.setTextColor(getResources().getColor(R.color.primary));
-                        return view;
-                    }
-                };
-
-                listView.setAdapter(adapterActive);
             }
         });
 
@@ -131,6 +121,23 @@ public class OfficerActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         progressDialog.dismiss();
+
+                        adapterActive = new ArrayAdapter<String>
+                                (getApplicationContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForActive()){
+                            @Override
+                            public View getView(int position, View convertView, ViewGroup parent){
+                                View view = super.getView(position, convertView, parent);
+
+                                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                                tv.setTextColor(getResources().getColor(R.color.primary));
+                                return view;
+                            }
+                        };
+
+                        listView.setAdapter(adapterActive);
+
+                        adapterActive.notifyDataSetChanged();
                     }
                 },
                 new Response.ErrorListener(){

@@ -66,8 +66,6 @@ public class OrderHistory extends AppCompatActivity {
     public static String address;
     private static List<OrderLaundry> resultResponseActive = new ArrayList<>();
     private static List<OrderLaundry> resultResponseHistory = new ArrayList<>();
-    private static ArrayAdapter<String> adapterActive;
-    private static ArrayAdapter<String> adapterHistory;
     static ProgressDialog progressDialog = null;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -127,6 +125,11 @@ public class OrderHistory extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+        View rootView;
+        ListView listViewActive = null;
+        ListView listView = null;
+        ArrayAdapter<String> adapterActive;
+        ArrayAdapter<String> adapterHistory;
 
         public PlaceholderFragment() {
         }
@@ -148,7 +151,7 @@ public class OrderHistory extends AppCompatActivity {
                                  Bundle savedInstanceState) {
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_ADD) {
-                View rootView = inflater.inflate(R.layout.fragment_add_order, container, false);
+                rootView = inflater.inflate(R.layout.fragment_add_order, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.accent));
 
                 TextView notif = (TextView) rootView.findViewById(R.id.tvNotif);
@@ -193,30 +196,19 @@ public class OrderHistory extends AppCompatActivity {
                 return rootView;
             }
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_VIEW) {
-                final View rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
+                rootView = inflater.inflate(R.layout.fragment_view_order, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.accent));
                 Button btnRefreshActive = (Button) rootView.findViewById(R.id.btnRefreshActive);
-                final ListView listViewActive = (ListView) rootView.findViewById(R.id.listViewResult);
+                listViewActive = (ListView) rootView.findViewById(R.id.listViewResult);
                 final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound);
                 text.setVisibility(View.INVISIBLE);
+
+                getActiveOrderByEmail();
 
                 btnRefreshActive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getActiveOrderByEmail();
-                        adapterActive = new ArrayAdapter<String>
-                                (rootView.getContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForActive()){
-                            @Override
-                            public View getView(int position, View convertView, ViewGroup parent){
-                                View view = super.getView(position, convertView, parent);
-
-                                TextView tv = (TextView) view.findViewById(android.R.id.text1);
-
-                                tv.setTextColor(getResources().getColor(R.color.primary));
-                                return view;
-                            }
-                        };
-                        listViewActive.setAdapter(adapterActive);
                     }
                 });
 
@@ -236,30 +228,19 @@ public class OrderHistory extends AppCompatActivity {
             }
 
             else if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_HISTORY) {
-                final View rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
+                rootView = inflater.inflate(R.layout.fragment_view_order_history, container, false);
                 rootView.setBackgroundColor(getResources().getColor(R.color.accent));
-                final ListView listView = (ListView) rootView.findViewById(R.id.listViewHistory);
+                listView = (ListView) rootView.findViewById(R.id.listViewHistory);
                 Button btnRefresh = (Button) rootView.findViewById(R.id.btnRefresh);
                 final TextView text = (TextView) rootView.findViewById(R.id.txtNotFound2);
                 text.setVisibility(View.INVISIBLE);
+
+                getHistoryOrderByEmail();
 
                 btnRefresh.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         getHistoryOrderByEmail();
-                        adapterHistory = new ArrayAdapter<String>
-                                (rootView.getContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForHistory()){
-                            @Override
-                            public View getView(int position, View convertView, ViewGroup parent){
-                                View view = super.getView(position, convertView, parent);
-
-                                TextView tv = (TextView) view.findViewById(android.R.id.text1);
-
-                                tv.setTextColor(getResources().getColor(R.color.primary));
-                                return view;
-                            }
-                        };
-                        listView.setAdapter(adapterHistory);
                     }
                 });
 
@@ -347,6 +328,21 @@ public class OrderHistory extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             progressDialog.dismiss();
+
+                            adapterActive = new ArrayAdapter<String>
+                                    (rootView.getContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForActive()){
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent){
+                                    View view = super.getView(position, convertView, parent);
+
+                                    TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                                    tv.setTextColor(getResources().getColor(R.color.primary));
+                                    return view;
+                                }
+                            };
+                            listViewActive.setAdapter(adapterActive);
+                            adapterActive.notifyDataSetChanged();
                         }
                     },
                     new Response.ErrorListener(){
@@ -405,6 +401,21 @@ public class OrderHistory extends AppCompatActivity {
                                 Toast.makeText(getContext(),e.toString(),Toast.LENGTH_LONG).show();
                             }
                             progressDialog.dismiss();
+
+                            adapterHistory = new ArrayAdapter<String>
+                                    (rootView.getContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForHistory()){
+                                @Override
+                                public View getView(int position, View convertView, ViewGroup parent){
+                                    View view = super.getView(position, convertView, parent);
+
+                                    TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                                    tv.setTextColor(getResources().getColor(R.color.primary));
+                                    return view;
+                                }
+                            };
+                            listView.setAdapter(adapterHistory);
+                            adapterHistory.notifyDataSetChanged();
                         }
                     },
                     new Response.ErrorListener(){
