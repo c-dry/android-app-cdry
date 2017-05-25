@@ -147,8 +147,7 @@ public class OrderHistory extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
             if(getArguments().getInt(ARG_SECTION_NUMBER)==PAGE_ADD) {
                 rootView = inflater.inflate(R.layout.fragment_add_order, container, false);

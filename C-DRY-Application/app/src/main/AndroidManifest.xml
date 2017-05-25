@@ -34,13 +34,14 @@
 
         <activity
             android:name=".OrderHistory"
-            android:label="OrderHistory"
             android:theme="@style/AppTheme.Dark" />
 
-        <activity android:name=".OfficerActivity"
+        <activity
+            android:name=".OfficerActivity"
             android:theme="@style/AppTheme.Dark" />
 
-        <activity android:name=".UpdateOrderLaundry"
+        <activity
+            android:name=".UpdateOrderLaundry"
             android:theme="@style/AppTheme.Dark" />
     </application>
 
