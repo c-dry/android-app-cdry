@@ -41,7 +41,7 @@ public class SplashScreen extends AwesomeSplash {
 
         //Customize Title
         configSplash.setTitleSplash("");
-        configSplash.setTitleTextColor(R.color.primary);
+        configSplash.setTitleTextColor(R.color.accent);
         configSplash.setTitleTextSize(20f); //float value
         configSplash.setAnimTitleDuration(500);
         configSplash.setAnimTitleTechnique(Techniques.FlipInX);

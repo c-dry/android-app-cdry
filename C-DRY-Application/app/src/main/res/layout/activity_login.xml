@@ -13,10 +13,21 @@
         android:paddingRight="24dp"
         android:weightSum="1">
 
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C-DRY LAUNDRY"
+            android:textSize="35dp"
+            android:textStyle="bold"
+            android:textColor="#fff"
+            android:layout_gravity="center_horizontal" />
+
         <ImageView android:src="@drawable/laundry"
             android:layout_width="178dp"
             android:layout_height="200dp"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
             android:layout_gravity="center_horizontal" />
 
         <!--  Email Label -->

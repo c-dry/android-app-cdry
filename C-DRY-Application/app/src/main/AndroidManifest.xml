@@ -32,8 +32,10 @@
             android:name=".OrderHistory"
             android:label="OrderHistory"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".OfficerActivity" />
-        <activity android:name=".UpdateOrderLaundry"></activity>
+        <activity android:name=".OfficerActivity"
+            android:theme="@style/AppTheme.Dark" />
+        <activity android:name=".UpdateOrderLaundry"
+            android:theme="@style/AppTheme.Dark" ></activity>
     </application>
 
 </manifest>

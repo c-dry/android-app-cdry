@@ -2,14 +2,18 @@ package com.amobi_team.c_dry_application;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amobi_team.c_dry_application.model.OrderLaundry;
@@ -52,40 +56,23 @@ public class OfficerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 getActiveOrder();
-                adapterActive = new ArrayAdapter<>(getApplicationContext(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, parseOrderLaundryToShowDateOrderOnlyForActive());
+
+                adapterActive = new ArrayAdapter<String>
+                        (getApplicationContext(), android.R.layout.simple_list_item_1, parseOrderLaundryToShowDateOrderOnlyForActive()){
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent){
+                        View view = super.getView(position, convertView, parent);
+
+                        TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                        tv.setTextColor(getResources().getColor(R.color.primary));
+                        return view;
+                    }
+                };
+
                 listView.setAdapter(adapterActive);
             }
         });
-
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-//                        SweetAlertDialog sweetAlertDialog =  new SweetAlertDialog(OfficerActivity.this, SweetAlertDialog.WARNING_TYPE);
-//                        sweetAlertDialog.setCanceledOnTouchOutside(false);
-//                        sweetAlertDialog.setTitleText("Action")
-//                                .setContentText("Please chooce your action : ")
-//                                .setConfirmText("Update Order")
-//                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                                    @Override
-//                                    public void onClick(SweetAlertDialog sDialog) {
-//                                        UpdateOrderLaundry.data=resultResponseActive.get(i);
-//                                        sDialog.dismissWithAnimation();
-//                                        Intent intent = new Intent(getApplicationContext(),UpdateOrderLaundry.class);
-//                                        startActivity(intent);
-//                                    }
-//                                })
-//                                .setCancelText("Delete Orer")
-//                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                                    @Override
-//                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-//                                        deleteActiveOrderById(resultResponseActive.get(i).getId_order().toString());
-//                                        sweetAlertDialog.dismissWithAnimation();
-//                                    }
-//                                })
-//                                .show();
-//                    }
-//        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -212,7 +199,7 @@ public class OfficerActivity extends AppCompatActivity {
     public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForActive(){
         ArrayList<String> temp = new ArrayList<>();
         for (int i = 0; i < resultResponseActive.size(); i++) {
-            String tempView = resultResponseActive.get(i).getEmail()+" - "+resultResponseActive.get(i).getDate_order();
+            String tempView = resultResponseActive.get(i).getEmail()+"\n"+resultResponseActive.get(i).getDate_order()+"\n-----------------------------------------------------------------------------------";
             temp.add(tempView);
             Log.e("Parsing data",resultResponseActive.get(i).getDate_order().toString());
         }

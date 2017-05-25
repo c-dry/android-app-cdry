@@ -4,21 +4,31 @@
     android:layout_height="match_parent"
     tools:context="com.amobi_team.c_dry_application.ViewOrder">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="35dp"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#FFF"
-        android:text="List Order" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="70dp">
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="14dp"
+            android:text="MY ORDER"
+            android:textColor="#284e79"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="80dp"
+            android:textColor="#284e79"
+            android:text="Order Date :" />
 
         <Button
             android:id="@+id/btnRefreshActive"
@@ -33,19 +43,20 @@
         <ListView
             android:id="@+id/listViewResult"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="100dp" />
 
         <TextView
             android:id="@+id/txtNotFound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="No Active Order"
             android:textAlignment="center"
             android:textSize="30sp"
-            android:textStyle="italic"
-            android:layout_alignParentBottom="true"/>
+            android:textStyle="italic" />
     </RelativeLayout>
 
 </FrameLayout>

@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#5c9ce9</color>
-    <color name="primary_dark">#508bd1</color>
-    <color name="primary_darker">#325d8f</color>
+    <color name="primary">#284e79</color>
+    <color name="primary_dark">#203b5b</color>
+    <color name="primary_darker">#122841</color>
     <color name="accent">#ffffff</color>
 
-    <color name="black">#000000</color>
-    <color name="jet">#222222</color>
-    <color name="oil">#333333</color>
+    <color name="black">#284e79</color>
+    <color name="jet">#284e79</color>
+    <color name="oil">#284e79</color>
     <color name="monsoon">#777777</color>
     <color name="jumbo">#888888</color>
     <color name="aluminum">#999999</color>
-    <color name="base">#FFFFFF</color>
-    <color name="iron">#FFFFFF</color>
-    <color name="white">#FFFFFF</color>
-    <color name="BlueAnyar">#4272ab</color>
-    <color name="BiruAnyaran">#508bd1</color>
-    <color name="forgetMeNots">#5e99de</color>
-    <color name="blueRidgeMtns">#4477b4</color>
-    <color name="lightSteelBlue1">#65abfd</color>
+    <color name="base">#ffffff</color>
+    <color name="iron">#ffffff</color>
+    <color name="white">#ffffff</color>
 </resources>

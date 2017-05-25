@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@color/accent"
     tools:context="com.amobi_team.c_dry_application.OfficerActivity">
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="35dp"
+        android:textSize="30dp"
         android:textStyle="bold"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="13dp"
         android:layout_marginLeft="10dp"
-        android:textColor="#FFF"
-        android:text="List Order" />
+        android:textColor="#284e79"
+        android:text="LIST ORDER"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <ListView
         android:id="@+id/ListActiveOrder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp" />
+        android:layout_marginTop="90dp" />
+
     <Button
         android:id="@+id/btnRefreshActiveOfficer"
         android:layout_width="match_parent"
