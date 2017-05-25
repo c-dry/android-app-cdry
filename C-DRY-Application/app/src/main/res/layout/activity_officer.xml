@@ -16,7 +16,7 @@
         android:layout_marginTop="13dp"
         android:layout_marginLeft="10dp"
         android:textColor="#284e79"
-        android:text="LIST ORDER"
+        android:text="ALL ORDER"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 

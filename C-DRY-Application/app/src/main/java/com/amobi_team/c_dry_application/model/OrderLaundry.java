@@ -84,12 +84,12 @@ public class OrderLaundry {
     public String toString() {
         return
 
-                "email : " + email + "\n" +
-                "address : " + address + "\n" +
-                "weight : " + weight + "\n" +
-                "price : " + price + "\n" +
-                "Order : " + date_order +"\n" +
-                "Finish : " + date_end + "\n" +
-                "status : " + status +"\n";
+                "EMAIL      : " + email + "\n" +
+                "ADDRESS    : " + address + "\n" +
+                "WEIGHT     : " + weight + "\n" +
+                "PRICE      : " + price + "\n" +
+                "ORDER      : " + date_order +"\n" +
+                "FINISH     : " + date_end + "\n" +
+                "STATUS     : " + status +"\n";
     }
 }
