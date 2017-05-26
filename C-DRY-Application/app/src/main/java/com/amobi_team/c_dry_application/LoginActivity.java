@@ -188,14 +188,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String result){
                 String s = result.trim();
-                //Sementara untuk developing response selalu sukses
-//                s = "success";
                 if(s.equalsIgnoreCase("success user")){
                     onLoginSuccess();
                 }
                 else if(s.equalsIgnoreCase("success admin")){
-//                    Toast.makeText(getApplicationContext(),"Maaf Fitur petugas sedang dalam pengembangan"
-//                    ,Toast.LENGTH_SHORT).show();
                     onLoginAdmin();
                 }
                 else {
@@ -219,12 +215,6 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-//        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
-//                R.style.AppTheme_Dark_Dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Authenticating...");
-//        progressDialog.show();
-
         String email = _emailText.getText().toString();
         OrderHistory.emailUser = email;
         String password = _passwordText.getText().toString();
@@ -232,7 +222,6 @@ public class LoginActivity extends AppCompatActivity {
         // TODO: Implement your own authentication logic here.
 
         tryLogin(email, password);
-//        progressDialog.dismiss();
     }
 
 

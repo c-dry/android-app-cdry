@@ -50,6 +50,9 @@ public class UpdateOrderLaundry extends AppCompatActivity {
         edEmail.setText(data.getEmail());
         edDate.setText(data.getDate_order());
 
+        edEmail.setEnabled(false);
+        edAddress.setEnabled(false);
+
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

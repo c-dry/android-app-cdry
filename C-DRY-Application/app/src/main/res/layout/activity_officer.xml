@@ -11,20 +11,21 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:textStyle="bold"
-        android:layout_marginTop="13dp"
-        android:layout_marginLeft="10dp"
-        android:textColor="#284e79"
-        android:text="ALL ORDER"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="13dp"
+        android:text="ALL ORDER"
+        android:textColor="#284e79"
+        android:textSize="30dp"
+        android:textStyle="bold" />
 
     <ListView
         android:id="@+id/ListActiveOrder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="90dp" />
+        android:layout_marginTop="80dp"
+        android:layout_above="@+id/btnRefreshActiveOfficer" />
 
     <Button
         android:id="@+id/btnRefreshActiveOfficer"
@@ -35,4 +36,5 @@
         android:background="@drawable/button_background"
         android:text="Refresh Order"
         android:textColor="@color/accent" />
+
 </RelativeLayout>

@@ -206,7 +206,7 @@ public class OfficerActivity extends AppCompatActivity {
     public ArrayList<String> parseOrderLaundryToShowDateOrderOnlyForActive(){
         ArrayList<String> temp = new ArrayList<>();
         for (int i = 0; i < resultResponseActive.size(); i++) {
-            String tempView = resultResponseActive.get(i).getEmail()+"\n"+resultResponseActive.get(i).getDate_order()+"\n-----------------------------------------------------------------------------------";
+            String tempView = resultResponseActive.get(i).getEmail()+"\n"+resultResponseActive.get(i).getDate_order();
             temp.add(tempView);
             Log.e("Parsing data",resultResponseActive.get(i).getDate_order().toString());
         }
